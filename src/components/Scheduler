@@ -1,0 +1,204 @@
+import React, { Component } from "react";
+
+class Scheduler extends Component {
+  constructor() {
+    super();
+    this.state = {
+      schedule: {
+        "Monday": {
+          "Morning UpStairs": null,
+          "Morning Down Stairs": null,
+          "Morning Parking Lot": null,
+          "Lunch A": null,
+          "Lunch B": null,
+          "Lunch C": null,
+          "Lunch D": null,
+          "Afternoon Up Stairs": null,
+          "Afternoon Down Stairs": null,
+          "Afternoon Parking Lot": null,
+        },
+        "Tuesday": {
+          "Morning UpStairs": null,
+          "Morning Down Stairs": null,
+          "Morning Parking Lot": null,
+          "Lunch A": null,
+          "Lunch B": null,
+          "Lunch C": null,
+          "Lunch D": null,
+          "Afternoon Up Stairs": null,
+          "Afternoon Down Stairs": null,
+          "Afternoon Parking Lot": null,
+        },
+        "Wednesday": {
+          "Morning UpStairs": null,
+          "Morning Down Stairs": null,
+          "Morning Parking Lot": null,
+          "Lunch A": null,
+          "Lunch B": null,
+          "Lunch C": null,
+          "Lunch D": null,
+          "Afternoon Up Stairs": null,
+          "Afternoon Down Stairs": null,
+          "Afternoon Parking Lot": null,
+        },
+        "Thursday": {
+          "Morning UpStairs": null,
+          "Morning Down Stairs": null,
+          "Morning Parking Lot": null,
+          "Lunch A": null,
+          "Lunch B": null,
+          "Lunch C": null,
+          "Lunch D": null,
+          "Afternoon Up Stairs": null,
+          "Afternoon Down Stairs": null,
+          "Afternoon Parking Lot": null,
+        },
+        "Friday": {
+          "Morning UpStairs": null,
+          "Morning Down Stairs": null,
+          "Morning Parking Lot": null,
+          "Lunch A": null,
+          "Lunch B": null,
+          "Lunch C": null,
+          "Lunch D": null,
+          "Afternoon Up Stairs": null,
+          "Afternoon Down Stairs": null,
+          "Afternoon Parking Lot": null,
+        },
+        
+        // ... other days
+      },
+      work:[
+        "Morning UpStairs",
+          "Morning Down Stairs",
+          "Morning Parking Lot",
+          "Lunch A", 
+          "Lunch B",
+          "Lunch C",
+          "Lunch D",
+          "Afternoon Up Stairs",
+          "Afternoon Down Stairs",
+          "Afternoon Parking Lot"
+      ],
+      weekDays:["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      staffMembers: ["X1", "X2", "X3", "X4", "X5", "X6", "X7"],
+      staffLoad: {
+        X1: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 },
+        X2: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 },
+        X3: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 },
+        X4: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 },
+        X5: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 },
+        X6: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 },
+        X7: { "Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0 }
+        // ... other staff members
+      },
+    };
+  }
+
+ 
+
+  handleStaffSelectionForScheduler(day, timeSlot, staff) {
+    const updatedSchedule = { ...this.state.schedule };
+    updatedSchedule[day][timeSlot] = staff;
+    this.setState({ schedule: updatedSchedule });
+    const loadTable = {...this.state.staffLoad};
+    loadTable[staff][day] = 1
+    this.setState({ staffLoad: loadTable})
+  }
+
+ 
+
+  renderScheduleTable() {
+   
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            {this.state.weekDays.map((day) => (
+              <th key={day}>{day}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+        
+        {this.state.work.map((day, i=0) => (
+            <tr key={this.state.work[i]}>
+              
+              <td>{this.state.work[i]}</td>
+              
+              {this.state.weekDays.map((weekDay) => (
+                <td key={weekDay}>
+              
+                  <select
+                    value={this.state.schedule[day]}
+                    onChange={(e) => this.handleStaffSelectionForScheduler(weekDay, day, e.target.value)}
+                  >
+                    <option value="">Select Staff</option>
+                    {this.state.staffMembers.map((member) => (
+                      <option key={member} value={member}>
+                        {member}
+                      </option>
+                    ))}
+                  </select>
+                  
+                </td>
+              ))}
+            </tr>
+          ))}
+         
+        
+           
+         
+        </tbody>
+      </table>
+    );
+  }
+    
+//  
+
+  renderLoad() {
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Staff Member</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Totals</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(this.state.staffLoad).map((staff) => (
+            <tr key={staff}>
+              <td>{staff}</td>
+              {Object.keys(this.state.staffLoad[staff]).map((day) => (
+                <td key={day}>{this.state.staffLoad[staff][day]}</td>
+              ))}
+              <td>
+                {Object.values(this.state.staffLoad[staff]).reduce((a, b) => a + b, 0)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <h2 style={{align:"center"}}>Schedule</h2>
+        {this.renderScheduleTable()}
+
+        <h2 style={{align:"center"}}>Load</h2>
+        {this.renderLoad()}
+      </div>
+    );
+  }
+}
+
+export default Scheduler;
